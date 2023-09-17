@@ -10,11 +10,14 @@ dir_t build_list(void)
 	char *path = _getenv("PATH");
 	char **dir;
 	dir_t *head = NULL;
+	int i;
 
 	dir = split_string(path, ":");
 
-	while (*dir)
-		add_node_end(&head, *dir++);
+	while (dir[i])
+		add_node_end(&head, dir[i++]);
+
+	free_tokens(dir);
 
 	return (head);
 }

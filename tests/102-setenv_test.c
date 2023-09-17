@@ -7,18 +7,14 @@
  */
 int main(void)
 {
-	int i = 0, status;
+	int i = 0;
 
-	status = _setenv("HELLO", "WORLD", 1);
+	_setenv("HELLO", "WORLD", 1);
+	_unsetenv("HELLO");
 
-	while (environ[i] != NULL)
-	{
-		printf("%s\n", environ[i]);
-		i++;
-	}
-
-	if (status == 1)
-		free(environ);
+	while (environ[i])
+		printf("%s\n", environ[i++]);
+	clean();
 
 	return (0);
 

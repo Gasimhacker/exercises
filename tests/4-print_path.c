@@ -16,7 +16,7 @@ int main(void)
 	while (dir[i])
 		printf("%s\n", dir[i++]);
 
-	free(dir);
+	free_tokens(dir);
 
 	return (0);
 }

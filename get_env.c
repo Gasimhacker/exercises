@@ -3,27 +3,26 @@
 /**
  * is_equal - Check if the environment variable equals the passed name
  * @name: The name to search for
- * @environ: The current environment variable
+ * @environ_var: The current environment variable
  *
  * Return: The value of the environment variable
  *	   If the variable equals the name, or NULL if the
  *	   name and variable are not equal
  */
-char *is_equal(char *environ, const char *name)
+char *is_equal(char *environ_var, const char *name)
 {
-	if (name == NULL)
-		return (NULL);
+	int i = 0;
 
-	while (*name)
+	while (name[i])
 	{
-		if (*environ != *name)
+		if (environ_var[i] != name[i])
 			return (NULL);
-		name++;
-		environ++;
+		i++;
 	}
 
-	if (*environ == '=')
-		return (environ + 1);
+	if (environ_var[i] == '=')
+		return (environ_var + i + 1);
+
 
 	return (NULL);
 }
@@ -46,7 +45,6 @@ char *_getenv(const char *name, int *offset)
 	if (name == NULL)
 		return (NULL);
 
-
 	while (environ[i])
 	{
 		ptr = is_equal(environ[i], name);
@@ -56,7 +54,6 @@ char *_getenv(const char *name, int *offset)
 			*offset = i;
 			return (ptr);
 		}
-
 		i++;
 	}
 

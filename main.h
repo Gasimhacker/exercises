@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -56,8 +57,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
  * Return: An array of splitted words
  *	   Or "NULL" on failure
  */
-char **split_string(char *str, const char *delimiter);
-
+char **split_string(const char *str, const char *delimiter);
 
 /**
  * main - Get an invironment variable
@@ -90,13 +90,12 @@ size_t print_list(const dir_t *h);
 
 /**
  * find_file - check if the file is in the current path
- * @path: The path of the file
- * @file: The file name
+ * @file_name: The file name
  *
  * Return: If the file is found - 1
  *	   Otherwise - 0
  */
-int find_file(char *path, char *file);
+char *find_file(char *file_name);
 
 /**
  * _strlen - Returns the length of the string
@@ -116,16 +115,140 @@ int _strlen(const char *s);
 char *_strcpy(char *dest, const char *src);
 
 /**
+ * _strdup - Copy a string given as a parameter into
+ *		  a newly allocated memory space
+ * @str: The string to be copied
+ *
+ * Return: A pointer to the duplicated string, NULL otherwise
+ */
+char *_strdup(const char *str);
+
+/**
+ * _strcmp - Compare two strings
+ * @s1: The first string
+ * @s2: The string to compare with the first
+ * Return: Zero if both strings are identical,
+ *	   greater than zero when the matching
+ *	   character of left string has greater
+ *	   ASCII value than the character of
+ *	   the right string, less than zero
+ *	   when the left character has a smaller
+ *	   value.
+ */
+int _strcmp(char *s1, char *s2);
+
+/**
+ * copy_to_heap - Copy the environment variable array to the heap
+ * @count: The number of elements in the stack environment
+ * @alloced: This member should be changed to 1 after the allocation
+ *
+ * Return: On success - 1
+ *	   On error - 0
+ */
+int copy_to_heap(int count, int *alloced);
+
+/**
  * _setenv - Add or modify an environment variable
  * @name: The name of the variable to add or modify
  * @value: The value to assign to the variable
  * @overwrite: If the variable is present in the environment variable
  *	       and this member is not zero the variable will be updated
  *
- * Return: On success without allocation - 0
- *	   On success and there is memory allocation - 1
+ * Return: On success - 0
  *	   On error - -1
  */
 int _setenv(const char *name, const char *value, int overwrite);
+
+/**
+ * _unsetenv - Delete a a variable from the environment variable
+ * @name: The name of the variable to delete
+ *
+ * Return: On success - 0
+ *	   On error - -1
+ */
+int _unsetenv(const char *name);
+
+/**
+ * is_alloced - Check  if the environment variable is alloced
+ *
+ * Return: The address of the static variable to
+ *	   be able to change it to 1 if an allocation is made
+ */
+int *is_alloced(void);
+
+/**
+ * is_valid - Check if the variable name passed to [un]setenv() is a valid name
+ * @name: The name of the variable passed to setenv
+ *
+ * Return: If the name is valid - 1
+ *	   otherwise - 0
+ */
+int is_valid(const char *name);
+
+/**
+ * clean - Free the allocations created by [un]setenv
+ *
+ * Return: void
+ */
+void clean(void);
+
+/**
+ * free_tokens - Free an array of tokens
+ * @token: The array to be freed
+ *
+ * Return: void
+ */
+void free_tokens(char **token);
+
+/**
+ * print_env print the current environment
+ *
+ * Return: void
+ */
+void print_env(void);
+
+/**
+ * create_args - Create the arguments list
+ * @buff: This member will store the input written by user
+ * @args: After execution this member should contain
+ *	  the array of arguments that will be passed to the execve
+ */
+char **create_args(char *buff, char **args);
+
+/**
+ * execute - Execute the passed command
+ * @args: The arguments passed to the command
+ * @program_path: The path to the program to be executed
+ *
+ * Return: On success - 0
+ *	   On error - 1
+ */
+int execute(char **args, char *program_path);
+
+/**
+ * search_builtins - Check if the command passed is a builtin
+ *		     and if it is a builtin execute it
+ * @cmd_name: The name of the command
+ * @args: The arguments list to pass to the handler functions
+ *
+ * Return: If builtin found - 1
+ *	   Otherwise - 0
+ */
+int search_builtins(char *cmd_name, char **args);
+
+/**
+ * run_interactive - Execute the shell commands in the interactive mode
+ *
+ * Return: void
+ */
+void run_interactive(void);
+
+/**
+ * run_non_interactive - Execute the shell commands in
+ *			 the non interactive mode
+ *
+ * Return: void
+ */
+void run_non_interactive(void);
 
 #endif /* MAIN_H */

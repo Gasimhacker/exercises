@@ -8,10 +8,11 @@
  * Return: An array of splitted words
  *	   Or "NULL" on failure
  */
-char **split_string(char *str, const char *delimiter)
+char **split_string(const char *str, const char *delimiter)
 {
 	char **words = NULL;
-	char *token = strtok(str, delimiter);
+	char *str_copy = _strdup(str);
+	char *token = strtok(str_copy, delimiter);
 	int count = 1;
 
 
@@ -27,12 +28,14 @@ char **split_string(char *str, const char *delimiter)
 		if (!words)
 			return (NULL);
 
-		words[count - 1] = token;
+		words[count - 1] = _strdup(token);
 		words[count] = NULL;
 
 		count++;
 		token = strtok(NULL, delimiter);
 	}
+
+	free(str_copy);
 
 	return (words);
 }

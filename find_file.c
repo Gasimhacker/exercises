@@ -1,25 +1,5 @@
 #include "main.h"
 
-/**
- * create_path - Create an absolute path
- * @path: The path to file
- * @file_name: The file name
- *
- * Return: The created absolute path
- */
-char *create_path(char *path, char *file_name)
-{
-	int len1 = _strlen(path);
-	int len2 = _strlen(file_name);
-	char *new_var;
-
-	new_var = malloc((len1 + len2 + 2) * sizeof(char));
-	_strcpy(new_var, path);
-	_strcpy(new_var + len1, "/");
-	_strcpy(new_var + len1 + 1, file_name);
-
-	return (new_var);
-}
 
 /**
  * find_file - check if the file is present
@@ -49,7 +29,7 @@ char *find_file(char *file_name)
 
 	while (dir[i])
 	{
-		full_path = create_path(dir[i], file_name);
+		full_path = cat_with_delimiter(dir[i], "/", file_name);
 		if (stat(full_path, &st) == 0)
 		{
 			clean(dir);

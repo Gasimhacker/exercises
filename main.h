@@ -98,6 +98,17 @@ size_t print_list(const dir_t *h);
 char *find_file(char *file_name);
 
 /**
+ * cat_with_delimiter - Create an absolute path
+ * @first_name: The first nam
+ * @delim: The delimiter between the two names
+ * @second_name: The second name
+ *
+ * Return: A duplicate containing the concatenated word
+ */
+char *cat_with_delimiter(const char *first_name,
+		char *delim, const char *second_name);
+
+/**
  * _strlen - Returns the length of the string
  * @s: The string to calculate its length
  *
@@ -144,6 +155,26 @@ int _strcmp(const char *s1, const char *s2);
  *	   On error - 0
  */
 int copy_to_heap(void);
+
+/**
+ * _realloc - Reallocate memory block using malloc and free
+ *	      and copy the content of ptr to the newly allocated space,
+ *	      in the range from the start of ptr up to
+ *	      the minimum of the old and new sizes.
+ *	      If new_size > old_size, the "added" memory
+ *	      should not be initialized
+ * @ptr: A pointer to the memory previously allocated with a call to malloc:
+ *	 "malloc(old_size)"
+ * @old_size: The size, in bytes, of the allocated space for ptr
+ * @new_size: The size, in bytes, of the new memory block
+ *
+ * Return: A pointer to the allocated memory,
+ *	   if new_size == old_size,do not do anything and return ptr
+ *	   If new_size is equal to zero, and ptr is not NULL,
+ *	   then the call is equivalent to free(ptr). Return NULL
+ *	   If malloc fails, then _realloc returns NULL
+ */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 
 /**
  * _setenv - Add or modify an environment variable

@@ -135,17 +135,15 @@ char *_strdup(const char *str);
  *	   when the left character has a smaller
  *	   value.
  */
-int _strcmp(char *s1, char *s2);
+int _strcmp(const char *s1, const char *s2);
 
 /**
  * copy_to_heap - Copy the environment variable array to the heap
- * @count: The number of elements in the stack environment
- * @alloced: This member should be changed to 1 after the allocation
  *
  * Return: On success - 1
  *	   On error - 0
  */
-int copy_to_heap(int count, int *alloced);
+int copy_to_heap(void);
 
 /**
  * _setenv - Add or modify an environment variable
@@ -169,39 +167,15 @@ int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(const char *name);
 
 /**
- * is_alloced - Check  if the environment variable is alloced
- *
- * Return: The address of the static variable to
- *	   be able to change it to 1 if an allocation is made
- */
-int *is_alloced(void);
-
-/**
- * is_valid - Check if the variable name passed to [un]setenv() is a valid name
- * @name: The name of the variable passed to setenv
- *
- * Return: If the name is valid - 1
- *	   otherwise - 0
- */
-int is_valid(const char *name);
-
-/**
  * clean - Free the allocations created by [un]setenv
+ * @array: The array to be freed
  *
  * Return: void
  */
-void clean(void);
+void clean(char **array);
 
 /**
- * free_tokens - Free an array of tokens
- * @token: The array to be freed
- *
- * Return: void
- */
-void free_tokens(char **token);
-
-/**
- * print_env print the current environment
+ * print_env - print the current environment
  *
  * Return: void
  */
@@ -209,11 +183,10 @@ void print_env(void);
 
 /**
  * create_args - Create the arguments list
- * @buff: This member will store the input written by user
- * @args: After execution this member should contain
- *	  the array of arguments that will be passed to the execve
+ *
+ * Return: An array of command's arguments
  */
-char **create_args(char *buff, char **args);
+char **create_args(void);
 
 /**
  * execute - Execute the passed command
@@ -250,5 +223,48 @@ void run_interactive(void);
  * Return: void
  */
 void run_non_interactive(void);
+
+/**
+ * get_exit_status - Save the last exit code
+ *
+ * Return: A pointer to the last saved exit code
+ */
+int *get_exit_status(void);
+
+/**
+ * _atoi - Converts a string to an integer.
+ * @s: The string to be converted.
+ *
+ * Return: The integer value of the converted string.
+ */
+int _atoi(char *s);
+
+/**
+ * _itoa - Convert a positive integer to string
+ * @num: The number to convert
+ *
+ * Return: A pointer to the string created, or NULL on failure
+ */
+char *_itoa(int num);
+
+/**
+ * _strchr - Locate a character in a string
+ * @s: The string to be searched
+ * @c: The character to find
+ *
+ * Return: A pointer to the first occurrence of the character c
+ *	   in the string s, or NULL if the character is
+ *	   not found
+ */
+char *_strchr(char *s, char c);
+
+/**
+ * is_equal_found - Search for the equal sign inside the name
+ * @name: The variable to check its name
+ *
+ * Return: If the '=' is found - 1
+ *	   otherwise - 0
+ */
+int is_equal_found(const char *name);
 
 #endif /* MAIN_H */

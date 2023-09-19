@@ -9,13 +9,13 @@
  */
 void run_non_interactive(void)
 {
-	char *buff = NULL, *full_path, **args = NULL;
+	char *full_path, **args = NULL;
 
-	args = create_args(buff, args);
+	args = create_args();
 
 	if (search_builtins(args[0], args))
 	{
-		free_tokens(args);
+		clean(args);
 		return;
 	}
 
@@ -23,8 +23,7 @@ void run_non_interactive(void)
 
 	if (full_path == NULL)
 	{
-		free_tokens(args);
-		free(buff);
+		clean(args);
 		perror("Error");
 		exit(127);
 	}

@@ -10,7 +10,7 @@
  */
 int execute(char **args, char *program_path)
 {
-	int status;
+	int status, *exit_status = get_exit_status();
 	pid_t child_pid;
 
 	child_pid = fork();
@@ -25,13 +25,20 @@ int execute(char **args, char *program_path)
 		if (execve(program_path, args, environ) == -1)
 		{
 			perror("Error");
-			free(args);
+			clean(args);
+			free(program_path);
+			exit(1);
 		}
 	}
 	else
 	{
 		wait(&status);
+
+		if (WIFEXITED(status))
+			*exit_status = WEXITSTATUS(status);
+
 		free(program_path);
+		clean(args);
 	}
 	return (0);
 }

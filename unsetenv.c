@@ -1,10 +1,19 @@
 #include "main.h"
 
-
-int delete_var(int count, int offset)
+/**
+ * delete_var - Delete a variable from the environment
+ * @offset: The variable's offset
+ *
+ * Return: On success - 0
+ *	   on error - -1
+ */
+int delete_var(int offset)
 {
 	char **new_environment, *temp_var;
-	int i = 0;
+	int i = 0, count = 0;
+
+	while (environ[count])
+		count++;
 
 	new_environment = malloc(count * sizeof(char *));
 	if (new_environment == NULL)
@@ -18,7 +27,7 @@ int delete_var(int count, int offset)
 
 	temp_var = environ[offset];
 
-	while(environ[i])
+	while (environ[i])
 	{
 		new_environment[i] = environ[i + 1];
 		i++;
@@ -41,10 +50,9 @@ int delete_var(int count, int offset)
 int _unsetenv(const char *name)
 {
 	char *env_var;
-	int *alloced = is_alloced();
-	int offset, count = 0;
+	int offset;
 
-	if (name == NULL || !is_valid(name))
+	if (name == NULL || is_equal_found(name))
 		return (-1);
 
 	env_var = _getenv(name, &offset);
@@ -52,14 +60,8 @@ int _unsetenv(const char *name)
 	if (env_var == NULL)
 		return (0);
 
-	while (environ[count])
-		count++;
-	printf("count = %d, offset = %d\n", count, offset);
 
-	if (*alloced == 0)
-		copy_to_heap(count, alloced);
-
-	delete_var(count, offset);
+	delete_var(offset);
 
 	return (0);
 }

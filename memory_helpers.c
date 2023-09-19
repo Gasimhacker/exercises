@@ -1,33 +1,34 @@
 #include "main.h"
 
 /**
- * is_alloced - Check  if the environment variable is alloced
+ * get_exit_status - Save the last exit code
  *
- * Return: The address of the static variable to
- *	   be able to change it to 1 if an allocation is made
+ * Return: A pointer to the last saved exit code
  */
-int *is_alloced(void)
+int *get_exit_status(void)
 {
-	static int alloced;
+	static int exit_status = EXIT_SUCCESS;
 
-	return (&alloced);
+	return (&exit_status);
 }
+
 
 
 /**
  * copy_to_heap - Copy the environment variable array to the heap
- * @count: The number of elements in the stack environment
- * @alloced: This member should be changed to 1 after the allocation
  *
  * Return: On success - 1
  *	   On error - 0
  */
-int copy_to_heap(int count, int *alloced)
+int copy_to_heap(void)
 {
 	char **new_environment;
 	int i = 0;
 
-	new_environment = malloc((count + 1) * sizeof(char *));
+	while (environ[i])
+		i++;
+
+	new_environment = malloc((i + 1) * sizeof(char *));
 	if (new_environment == NULL)
 		return (0);
 
@@ -36,43 +37,26 @@ int copy_to_heap(int count, int *alloced)
 
 	new_environment[i] = NULL;
 
-	*alloced = 1;
-
 	environ = new_environment;
 
 	return (1);
 }
 
 /**
- * clean - Free the allocations created by [un]setenv
+ * clean - Free an array of pointers
+ * @array: The array to be freed
  *
  * Return: void
  */
-void clean(void)
+void clean(char **array)
 {
-	int i = 0;
+	int i;
 
-	while (environ[i])
-			free(environ[i++]);
-
-	free(environ);
-
-}
-
-/**
- * free_tokens - Free an array of tokens
- * @token: The array to be freed
- *
- * Return: void
- */
-void free_tokens(char **tokens)
-{
-	int i = 0;
-
-	if (tokens == NULL)
+	if (array == NULL)
 		return;
 
-	for (i = 0; tokens[i]; i++)
-		free(tokens[i]);
-	free(tokens);
+	for (i = 0; array[i]; i++)
+		free(array[i]);
+
+	free(array);
 }

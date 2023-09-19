@@ -1,6 +1,12 @@
 #include "main.h"
 
-
+/**
+ * create_path - Create an absolute path
+ * @path: The path to file
+ * @file_name: The file name
+ *
+ * Return: The created absolute path
+ */
 char *create_path(char *path, char *file_name)
 {
 	int len1 = _strlen(path);
@@ -46,7 +52,7 @@ char *find_file(char *file_name)
 		full_path = create_path(dir[i], file_name);
 		if (stat(full_path, &st) == 0)
 		{
-			free_tokens(dir);
+			clean(dir);
 			return (full_path);
 		}
 		else
@@ -56,7 +62,7 @@ char *find_file(char *file_name)
 		}
 	}
 
-	free_tokens(dir);
+	clean(dir);
 
 	return (NULL);
 }

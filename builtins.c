@@ -1,6 +1,29 @@
 #include "main.h"
 
 
+int create_alias(char *alias)
+{
+	int i = 0;
+	alias_t *head = get_head();
+	char **name_val_arr = split_string(alias, "=");
+
+	while (name_val_arr[i])
+		i++;
+
+	if (i != 2)
+	{
+		clean(name_val_arr);
+		return (-1);
+	}
+
+	add_alias_end(&head, name_val_arr[0], name_val_arr[1]);
+	clean(name_val_arr);
+
+	return (1);
+}	
+
+
+
 /**
  * search_builtins - Check if the command passed is a builtin
  *		     and if it is a builtin execute it
@@ -12,7 +35,9 @@
  */
 int search_builtins(char *cmd_name, char **args)
 {
-	int i = 0, *exit_status = get_exit_status();
+	int i = 0;
+	int *exit_status = get_exit_status();
+	static alias_t *head = get_head();
 
 	while (args[i])
 		i++;
@@ -43,6 +68,15 @@ int search_builtins(char *cmd_name, char **args)
 		if (i != 2)
 			return  (-1);
 		_unsetenv(args[1]);
+	}
+	else if (_strcmp(cmd_name, "alias") == 0)
+	{
+		if (i == 1)
+			print_aliases(head);
+		else if (i > 1)
+		{
+			create_alias(args[1]);
+		}
 	}
 	else
 	{

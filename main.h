@@ -28,6 +28,44 @@ typedef struct dir_s
 } dir_t;
 
 /**
+ * struct dir_s - A new type called alias_t for struct alias_s
+ * @name: The alias name
+ * @value: The value of the alias
+ * @next: A ponter to the next node
+ */
+typedef struct alias_s
+{
+	char *name;
+	char *value;
+	struct alias_s *next;
+} alias_t;
+
+/**
+ * add_alias_end - Add a new alias at the end of an aliases linked list
+ * @head: A pointer to a pointer to the first node in the linked list
+ * @name: The name of the alias to put inside the node
+ * @value: The value of the alias to put inside the node
+ *
+ * Return: A pointer to the new node in the linked list
+ */
+alias_t *add_alias_end(alias_t **head, const char *name, const char *value);
+
+/**
+ * print_list - Print the data stored in the nodes of a linked list
+ * @h: A pointer to the first node in the linked list
+ *
+ * Return: The number of nodes
+ */
+size_t print_aliases(const alias_t *h);
+
+/**
+ * get_head - Get the head of the aliases linked list
+ *
+ * Return: A pointer to the head of the linked list
+ */
+alias_t *get_head(void);
+
+/**
  * _strtok - Split the string into tokens
  * @str: The string to split
  * @delim: The string containing delimiters that

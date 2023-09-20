@@ -1,4 +1,3 @@
-markdown
 # Simple Shell
 
 Simple Shell is a project for the ALX Software Engineering program, aiming to create a basic replica of the Unix shell. It provides a command-line interface where users can interact with the operating system by executing commands.

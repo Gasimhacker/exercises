@@ -2,37 +2,32 @@
 
 /**
  * run_interactive - Execute the shell commands in the interactive mode
+ * @head: The head of the linked list that needs to be freed
+ * @shell_name: The name of the shell is used for printing error messages
  *
  * Return: void
  */
-void run_interactive(void)
+void run_interactive(alias_t **head, char *shell_name)
 {
-	char **args, *full_path;
+	char **commands = malloc(265 * sizeof(char *));
+	int is_seperator, lines_count, i;
 
 	while (1)
 	{
 		write(STDOUT_FILENO, "$ ", 2);
 
-		args = create_args();
-
-		if (search_builtins(args[0], args))
+		lines_count = _getlines(commands);
+		if (lines_count != 0)
 		{
-			clean(args);
-			continue;
+			for (i = 0; i < lines_count; i++)
+			{
+				is_seperator = check_separator(commands[i], head, shell_name);
+
+				if (!is_seperator)
+					search_execute(commands[i], head, shell_name);
+
+			}
 		}
-
-		full_path = find_file(args[0]);
-
-		if (full_path == NULL)
-		{
-			clean(args);
-			perror("Error");
-			continue;
-		}
-
-		execute(args, full_path);
 	}
-
+		free(commands);
 }
-
-

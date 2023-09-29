@@ -7,7 +7,7 @@
  */
 alias_t *get_head(void)
 {
-	static alias_t *head = NULL;
+	static alias_t *head;
 
 	return (head);
 }

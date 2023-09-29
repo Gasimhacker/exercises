@@ -114,14 +114,20 @@ char **split_string(const char *str, const char *delimiter)
 {
 	char **words = NULL;
 	char *str_copy = _strdup(str);
-	char *token = strtok(str_copy, delimiter);
+	char *token = _strtok(str_copy, delimiter);
 	int count = 1;
+
+
+	if (str == NULL)
+		return (NULL);
 
 
 	words = malloc(sizeof(char *));
 
 	if (!words)
 		return (NULL);
+
+	words[0] = NULL;
 
 	while (token != NULL)
 	{
@@ -134,7 +140,7 @@ char **split_string(const char *str, const char *delimiter)
 		words[count] = NULL;
 
 		count++;
-		token = strtok(NULL, delimiter);
+		token = _strtok(NULL, delimiter);
 	}
 
 	free(str_copy);

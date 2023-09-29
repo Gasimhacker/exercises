@@ -1,62 +1,87 @@
 #include "main.h"
 
-
-int create_alias(char *alias)
+/**
+ * handle_exit - Handle the exit routine
+ * @shell_name: The name of the shell is used for printing error messages
+ * @head: The head of the linked list that needs to be freed
+ * @arg_num: The number of arguments passed to the exit command
+ * @args: The arguments passed to the exit command
+ *
+ * Return: void
+ */
+void handle_exit(char *shell_name, alias_t **head, int arg_num, char **args)
 {
-	int i = 0;
-	alias_t *head = get_head();
-	char **name_val_arr = split_string(alias, "=");
+	int *exit_status = get_exit_status();
 
-	while (name_val_arr[i])
-		i++;
+	if (arg_num > 2)
+		return;
+	if (arg_num == 2)
+		*exit_status = (_atoi(args[1]));
 
-	if (i != 2)
+	if (*exit_status < 0 || (arg_num == 2 && _atoi(args[1]) == 0
+				&& _strcmp(args[1], "0")))
 	{
-		clean(name_val_arr);
-		return (-1);
+		wrong_exit_code_msg(shell_name, args[1]);
+		*exit_status = 2;
 	}
 
-	add_alias_end(&head, name_val_arr[0], name_val_arr[1]);
-	clean(name_val_arr);
+	clean(args);
+	clean(environ);
+	free_list(*head);
+	exit(*exit_status & 255);
+}
 
-	return (1);
-}	
-
+/**
+ * handle_aliases - Handle the alias builtin
+ * @head: The head of the linked list that needs to be freed
+ * @arg_num: The number of arguments passed to the exit command
+ * @args: The arguments passed to the exit command
+ *
+ * Return: void
+ */
+void handle_aliases(alias_t **head, int arg_num, char **args)
+{
+	if (arg_num == 1)
+		print_aliases(head);
+	else
+	{
+		arg_num = 1;
+		while (args[arg_num])
+		{
+			if (_strchr(args[arg_num], '='))
+				create_alias(head, args[arg_num]);
+			else
+				print_specific_alias(head, args[arg_num]);
+			arg_num++;
+		}
+	}
+}
 
 
 /**
  * search_builtins - Check if the command passed is a builtin
  *		     and if it is a builtin execute it
+ * @head: The head of the linked list that needs to be freed
+ * @shell_name: The name of the shell is used for printing error messages
  * @cmd_name: The name of the command
  * @args: The arguments list to pass to the handler functions
  *
  * Return: If builtin found - 1
  *	   Otherwise - 0
  */
-int search_builtins(char *cmd_name, char **args)
+int search_builtins(alias_t **head, char *shell_name,
+		char *cmd_name, char **args)
 {
 	int i = 0;
-	int *exit_status = get_exit_status();
-	static alias_t *head = get_head();
 
 	while (args[i])
 		i++;
 
 	if (_strcmp(cmd_name, "exit") == 0)
-	{
-		if (i > 2)
-			return  (-1);
-		if (i == 2)
-			*exit_status = _atoi(args[1]);
+		handle_exit(shell_name, head, i, args);
 
-		clean(args);
-		clean(environ);
-		exit(*exit_status);
-	}
 	else if (_strcmp(cmd_name, "env") == 0)
-	{
 		print_env();
-	}
 	else if (_strcmp(cmd_name, "setenv") == 0)
 	{
 		if (i != 3)
@@ -69,19 +94,11 @@ int search_builtins(char *cmd_name, char **args)
 			return  (-1);
 		_unsetenv(args[1]);
 	}
+	else if (_strcmp(cmd_name, "cd") == 0)
+		change_directory(args[1]);
 	else if (_strcmp(cmd_name, "alias") == 0)
-	{
-		if (i == 1)
-			print_aliases(head);
-		else if (i > 1)
-		{
-			create_alias(args[1]);
-		}
-	}
+		handle_aliases(head, i, args);
 	else
-	{
 		return (0);
-	}
-
 	return (1);
 }

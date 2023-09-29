@@ -43,6 +43,9 @@ void search_cmd_expansion(char **args)
 	int *exit_code;
 	char *str_expansion;
 
+	if (args == NULL)
+		return;
+
 	while (args[i])
 	{
 		if (_strcmp(args[i], "$?") == 0)
@@ -66,22 +69,60 @@ void search_cmd_expansion(char **args)
 	}
 }
 
+/**
+ * search_comments - Find if a comment is found
+ * @args: The array of arguments
+ *
+ * Return: void
+ */
+void search_comments(char **args)
+{
+	int i = 0;
+
+	if (args == NULL)
+		return;
+
+	while (args[i])
+	{
+		if (_strcmp(args[i], "#") == 0 || _strchr(args[i], '#') == args[i])
+		{
+			free(args[i]);
+			args[i] = NULL;
+			i++;
+			break;
+		}
+		i++;
+	}
+	while (args[i])
+	{
+		free(args[i]);
+		args[i] = NULL;
+		i++;
+	}
+}
 
 /**
  * create_args - Create the arguments list
+ * @buff: The buffer to be handled
  *
  * Return: The arguments list
  */
-char **create_args(void)
+char **create_args(char *buff)
 {
-	char *buff = NULL, **args;
-	size_t n;
-
-	if (getline(&buff, &n, stdin) == -1)
-		exit(1);
+	char **args;
 
 	args = split_string(buff, " \n");
-	search_cmd_expansion(args);
+
+	search_comments(args);
+	if (args && args[0] == NULL)
+	{
+		free(args);
+		args = NULL;
+	}
+	else
+	{
+		search_cmd_expansion(args);
+	}
 	free(buff);
 
 	return (args);

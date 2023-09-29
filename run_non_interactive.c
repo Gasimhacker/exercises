@@ -1,33 +1,28 @@
 #include "main.h"
 
-
 /**
  * run_non_interactive - Execute the shell commands in
  *			 the non interactive mode
+ * @head: The head of the linked list that needs to be freed
+ * @shell_name: The name of the shell is used for printing error messages
  *
  * Return: void
  */
-void run_non_interactive(void)
+void run_non_interactive(alias_t **head, char *shell_name)
 {
-	char *full_path, **args = NULL;
+	char **commands = malloc(265 * sizeof(char *));
+	int is_seperator, lines_count, i;
 
-	args = create_args();
-
-	if (search_builtins(args[0], args))
+	lines_count = _getlines(commands);
+	if (lines_count != 0)
 	{
-		clean(args);
-		return;
+		for (i = 0; i < lines_count; i++)
+		{
+			is_seperator = check_separator(commands[i], head, shell_name);
+
+			if (!is_seperator)
+				search_execute(commands[i], head, shell_name);
+		}
 	}
-
-	full_path = find_file(args[0]);
-
-	if (full_path == NULL)
-	{
-		clean(args);
-		perror("Error");
-		exit(127);
-	}
-
-	execve(full_path, args, environ);
+	free(commands);
 }
-
